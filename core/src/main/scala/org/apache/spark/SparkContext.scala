@@ -95,6 +95,8 @@ class SparkContext(config: SparkConf) extends Logging with ExecutorAllocationCli
 
   val startTime = System.currentTimeMillis()
 
+  var jtest = println("je inside create spark context .. ")
+
   @volatile private var stopped: Boolean = false
 
   private def assertNotStopped(): Unit = {
