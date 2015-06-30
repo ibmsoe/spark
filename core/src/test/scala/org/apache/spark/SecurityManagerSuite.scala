@@ -129,6 +129,17 @@ class SecurityManagerSuite extends FunSuite {
 
   test("ssl on setup") {
     val conf = SSLSampleConfigs.sparkSSLConfig()
+    val expectedAlgorithms = Set(
+    "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384",
+    "TLS_RSA_WITH_AES_256_CBC_SHA256",
+    "TLS_DHE_RSA_WITH_AES_256_CBC_SHA256",
+    "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256",
+    "TLS_DHE_RSA_WITH_AES_128_CBC_SHA256",
+    "SSL_ECDHE_RSA_WITH_AES_256_CBC_SHA384",
+    "SSL_RSA_WITH_AES_256_CBC_SHA256",
+    "SSL_DHE_RSA_WITH_AES_256_CBC_SHA256",
+    "SSL_ECDHE_RSA_WITH_AES_128_CBC_SHA256",
+    "SSL_DHE_RSA_WITH_AES_128_CBC_SHA256")
 
     val securityManager = new SecurityManager(conf)
 
@@ -145,9 +156,8 @@ class SecurityManagerSuite extends FunSuite {
     assert(securityManager.fileServerSSLOptions.trustStorePassword === Some("password"))
     assert(securityManager.fileServerSSLOptions.keyStorePassword === Some("password"))
     assert(securityManager.fileServerSSLOptions.keyPassword === Some("password"))
-    assert(securityManager.fileServerSSLOptions.protocol === Some("TLSv1"))
-    assert(securityManager.fileServerSSLOptions.enabledAlgorithms ===
-        Set("SSL_RSA_WITH_RC4_128_SHA", "SSL_RSA_WITH_DES_CBC_SHA"))
+    assert(securityManager.fileServerSSLOptions.protocol === Some("TLSv1.2"))
+    assert(securityManager.fileServerSSLOptions.enabledAlgorithms === expectedAlgorithms)
 
     assert(securityManager.akkaSSLOptions.trustStore.isDefined === true)
     assert(securityManager.akkaSSLOptions.trustStore.get.getName === "truststore")
@@ -156,9 +166,8 @@ class SecurityManagerSuite extends FunSuite {
     assert(securityManager.akkaSSLOptions.trustStorePassword === Some("password"))
     assert(securityManager.akkaSSLOptions.keyStorePassword === Some("password"))
     assert(securityManager.akkaSSLOptions.keyPassword === Some("password"))
-    assert(securityManager.akkaSSLOptions.protocol === Some("TLSv1"))
-    assert(securityManager.akkaSSLOptions.enabledAlgorithms ===
-        Set("SSL_RSA_WITH_RC4_128_SHA", "SSL_RSA_WITH_DES_CBC_SHA"))
+    assert(securityManager.akkaSSLOptions.protocol === Some("TLSv1.2"))
+    assert(securityManager.akkaSSLOptions.enabledAlgorithms === expectedAlgorithms)
   }
 
   test("ssl off setup") {
